@@ -16,14 +16,14 @@ use utils::*;
 /// name and the definition's rating.
 #[derive(Clone, Debug)]
 pub struct Definition {
-    author: String,
-    definition: String,
-    example: String,
-    id: u64,
-    permalink: String,
-    thumbs_down: u64,
-    thumbs_up: u64,
-    word: String,
+    pub author: String,
+    pub definition: String,
+    pub example: String,
+    pub id: u64,
+    pub permalink: String,
+    pub thumbs_down: u64,
+    pub thumbs_up: u64,
+    pub word: String,
 }
 
 impl Definition {
@@ -47,8 +47,8 @@ impl Definition {
 /// `Definition`s.
 #[derive(Clone, Debug)]
 pub struct Response {
-    definitions: Vec<Definition>,
-    tags: Vec<String>,
+    pub definitions: Vec<Definition>,
+    pub tags: Vec<String>,
 }
 
 impl Response {

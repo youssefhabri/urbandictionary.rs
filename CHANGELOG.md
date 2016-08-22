@@ -9,9 +9,19 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Changed
 
 
-## [0.1.0] - 2016-01-11
+## [0.1.1] - 2016-08-21
+
+### Added
+
+### Changed
+
+- Make every field public
+
+
+## [0.1.0] - 2016-08-21
 
 Initial commit.
 
 
-[Unreleased]: https://github.com/zeyla/iso3166-3.rs/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/zeyla/urbandictionary.rs/compare/v0.1.1...HEAD
+[0.1.1]: https://github.com/zeyla/urbandictionary.rs/compare/v0.1.0...v0.1.1
