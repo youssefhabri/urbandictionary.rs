@@ -1,0 +1,8 @@
+[package]
+name = "urbandictionary"
+version = "0.1.0"
+authors = ["Austin Hellyer <hello@austinhellyer.me>"]
+
+[dependencies]
+hyper = "0.9"
+serde_json = "0.8"
