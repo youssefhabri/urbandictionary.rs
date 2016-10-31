@@ -1,18 +1,10 @@
-[travis-badge]: https://img.shields.io/travis/zeyla/urbandictionary.rs.svg?style=flat-square
-[travis]: https://travis-ci.org/zeyla/urbandictionary.rs
-[license-badge]: https://img.shields.io/badge/license-ISC-blue.svg?style=flat-square
-[license]: https://opensource.org/licenses/ISC
-[docs-badge]: https://img.shields.io/badge/docs-online-2020ff.svg
-[docs]: https://docs.austinhellyer.me/urbandictionary/
-
-[![travis-badge][]][travis] [![license-badge][]][license] [![docs-badge][]][docs]
+[![ci-badge][]][ci] [![license-badge][]][license] [![docs-badge][]][docs]
 
 # urbandictionary.rs
 
 Unofficial Rust crate for the Urbandictionary API.
 
-[Documentation](http://docs.austinhellyer.me/urbandictionary)
-
+[Documentation][docs]
 
 ### Installation
 
@@ -27,7 +19,6 @@ And include it in your project:
 ```rust
 extern crate urbandictionary;
 ```
-
 
 ### Examples
 
@@ -48,4 +39,10 @@ let definition = urbandictionary::define("cat");
 
 License info in [LICENSE.md]. Long story short, ISC.
 
-[LICENSE.md]: https://github.com/zeyla/urbandictionary.rs/blob/master/LICENSE.md
+[ci]: https://gitlab.com/kalasi/urbandictionary.rs/pipelines
+[ci-badge]: https://gitlab.com/kalasi/urbandictionary.rs/badges/master/build.svg
+[docs]: https://docs.austinhellyer.me/urbandictionary/
+[docs-badge]: https://img.shields.io/badge/docs-online-2020ff.svg
+[LICENSE.md]: https://gitlab.com/kalasi/urbandictionary.rs/blob/master/LICENSE.md
+[license]: https://opensource.org/licenses/ISC
+[license-badge]: https://img.shields.io/badge/license-ISC-blue.svg?style=flat-square
