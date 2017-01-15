@@ -57,10 +57,10 @@ mod model {
 }
 
 pub use error::{Error, Result};
-pub use model::*;
+pub use model::{Definition, Response};
 
-use hyper::header::Connection;
 use hyper::client::{Client, Response as HyperResponse};
+use hyper::header::Connection;
 
 /// Attempt to retrieve the first `Definition` for a word.
 pub fn define<S: Into<String>>(word: S) -> Result<Option<Definition>> {
