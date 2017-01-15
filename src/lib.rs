@@ -1,7 +1,7 @@
 extern crate hyper;
 extern crate serde_json;
 
-pub mod error;
+mod error;
 
 mod model {
     include!(concat!(env!("OUT_DIR"), "/model.rs"));
