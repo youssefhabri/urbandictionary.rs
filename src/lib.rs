@@ -66,7 +66,7 @@ use hyper::client::{Client, Response as HyperResponse};
 pub fn define<S: Into<String>>(word: S) -> Result<Option<Definition>> {
     let mut request = try!(request(word.into()));
 
-    Ok(if request.definitions.len() > 0 {
+    Ok(if !request.definitions.is_empty() {
         Some(request.definitions.remove(0))
     } else {
         None
