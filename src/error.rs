@@ -5,8 +5,11 @@ use hyper::Error as HyperError;
 use serde_json::Error as JsonError;
 use serde_json::Value;
 
+/// Common result type used throughout the library.
 pub type Result<T> = ::std::result::Result<T, Error>;
 
+/// Common error type used throughout the library, to be used as a holder for
+/// errors from various other libraries.
 #[derive(Debug)]
 pub enum Error {
 	/// A `hyper` crate error
