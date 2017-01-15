@@ -34,15 +34,14 @@ Retrieve the top definition for a word:
 let definition = urbandictionary::define("cat");
 ```
 
-
 ### License
 
 License info in [LICENSE.md]. Long story short, ISC.
 
-[ci]: https://gitlab.com/kalasi/urbandictionary.rs/pipelines
-[ci-badge]: https://gitlab.com/kalasi/urbandictionary.rs/badges/master/build.svg
-[docs]: https://docs.austinhellyer.me/urbandictionary/
+[ci]: https://travis-ci.org/zeyla/urbandictionary.rs
+[ci-badge]: https://travis-ci.org/zeyla/urbandictionary.svg?branch=master
+[docs]: https://docs.austinhellyer.me/urbandictionary
 [docs-badge]: https://img.shields.io/badge/docs-online-2020ff.svg
-[LICENSE.md]: https://gitlab.com/kalasi/urbandictionary.rs/blob/master/LICENSE.md
+[LICENSE.md]: https://github.com/zeyla/urbandictionary.rs/blob/master/LICENSE.md
 [license]: https://opensource.org/licenses/ISC
 [license-badge]: https://img.shields.io/badge/license-ISC-blue.svg?style=flat-square
