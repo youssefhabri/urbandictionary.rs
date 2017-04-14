@@ -64,7 +64,7 @@ use hyper::header::Connection;
 
 /// Attempt to retrieve the first `Definition` for a word.
 pub fn define<S: Into<String>>(word: S) -> Result<Option<Definition>> {
-    let mut request = try!(request(word.into()));
+    let mut request = request(word.into())?;
 
     Ok(if !request.definitions.is_empty() {
         Some(request.definitions.remove(0))
@@ -83,9 +83,7 @@ fn request(word: String) -> Result<Response> {
     // UrbanDictionary's API does not support HTTPS at this time
     let url = format!("http://api.urbandictionary.com/v0/define?term={}", word);
 
-    let response = try!(client.get(&url)
-        .header(Connection::close())
-        .send());
+    let response = client.get(&url).header(Connection::close()).send()?;
 
     Ok(serde_json::from_reader::<HyperResponse, Response>(response)?)
 }
