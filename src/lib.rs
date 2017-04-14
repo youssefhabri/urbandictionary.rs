@@ -54,7 +54,8 @@
 //! [license-badge]: https://img.shields.io/badge/license-ISC-blue.svg?style=flat-square
 #![deny(missing_docs)]
 
-#[macro_use] extern crate serde_derive;
+#[macro_use]
+extern crate serde_derive;
 
 extern crate hyper;
 extern crate serde;
@@ -87,10 +88,10 @@ impl UrbanClient {
         let mut request = self.request(word)?;
 
         Ok(if !request.definitions.is_empty() {
-            Some(request.definitions.remove(0))
-        } else {
-            None
-        })
+           Some(request.definitions.remove(0))
+       } else {
+           None
+       })
     }
 
     /// Attempt to retrieve the definitions of a word.
@@ -99,9 +100,8 @@ impl UrbanClient {
     }
 
     fn request(&self, word: &str) -> Result<Response> {
-        // UrbanDictionary's API does not support HTTPS at this time
+        // UrbanDictionary's API does not support HTTPS at this time.
         let url = format!("http://api.urbandictionary.com/v0/define?term={}", word);
-
         let response = self.client.get(&url).header(Connection::close()).send()?;
 
         serde_json::from_reader::<HyperResponse, Response>(response).map_err(From::from)
