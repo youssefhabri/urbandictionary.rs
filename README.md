@@ -11,7 +11,7 @@ Unofficial Rust crate for the Urbandictionary API.
 Add the following dependency to your Cargo.toml:
 
 ```toml
-urbandictionary = "0.1"
+urbandictionary = "0.2"
 ```
 
 And include it in your project:
@@ -25,13 +25,19 @@ extern crate urbandictionary;
 Retrieve a list of definitions for a word:
 
 ```rust
-let definitions = urbandictionary::definitions("cat");
+use urbandictionary::UrbanClient;
+
+let client = UrbanClient::new();
+let definitions = client.definitions("cat").unwrap();
 ```
 
 Retrieve the top definition for a word:
 
 ```rust
-let definition = urbandictionary::define("cat");
+use urbandictionary::UrbanClient;
+
+let client = UrbanClient::new();
+let definition = client.define("cat").unwrap();
 ```
 
 ### License

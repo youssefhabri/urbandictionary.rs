@@ -2,6 +2,15 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.2.0] - 2017-04-14
+
+### Changed
+
+- The `define` and `definitions` functions now accepted a string slice;
+- A new struct has been made which is a thin wrapper over a Hyper Client;
+- Now uses serde_derive;
+- Dependencies updated.
+
 ## [0.1.2] - 2017-01-15
 
 ### Added

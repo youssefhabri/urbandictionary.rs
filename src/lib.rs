@@ -11,7 +11,7 @@
 //! Add the following dependency to your Cargo.toml:
 //!
 //! ```toml
-//! urbandictionary = "0.1"
+//! urbandictionary = "0.2"
 //! ```
 //!
 //! And include it in your project:
