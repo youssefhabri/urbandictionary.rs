@@ -1,8 +1,9 @@
 [package]
-authors = ["Austin Hellyer <hello@austinhellyer.me>"]
+authors = ["Zeyla Hellyer <zey@zey.moe>"]
 build = "build.rs"
 description = "Unofficial Rust wrapper for the UrbanDictionary API"
-documentation = "https://docs.austinhellyer.me/urbandictionary/"
+documentation = "https://docs.rs/crate/urbandictionary"
+homepage = "https://github.com/zeyla/urbandictionary.rs"
 license = "ISC"
 keywords = ["definitions", "dictionary", "urbandictionary", "urban"]
 name = "urbandictionary"
