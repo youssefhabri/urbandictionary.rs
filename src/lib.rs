@@ -83,8 +83,8 @@ impl UrbanClient {
     }
 
     /// Attempt to retrieve the first `Definition` for a word.
-    pub fn define<S: Into<String>>(&self, word: S) -> Result<Option<Definition>> {
-        let mut request = self.request(word.into())?;
+    pub fn define(&self, word: &str) -> Result<Option<Definition>> {
+        let mut request = self.request(word)?;
 
         Ok(if !request.definitions.is_empty() {
             Some(request.definitions.remove(0))
@@ -94,17 +94,17 @@ impl UrbanClient {
     }
 
     /// Attempt to retrieve the definitions of a word.
-    pub fn definitions<S: Into<String>>(&self, word: S) -> Result<Response> {
+    pub fn definitions(&self, word: &str) -> Result<Response> {
         self.request(word.into())
     }
 
-    fn request(&self, word: String) -> Result<Response> {
+    fn request(&self, word: &str) -> Result<Response> {
         // UrbanDictionary's API does not support HTTPS at this time
         let url = format!("http://api.urbandictionary.com/v0/define?term={}", word);
 
         let response = self.client.get(&url).header(Connection::close()).send()?;
 
-        Ok(serde_json::from_reader::<HyperResponse, Response>(response)?)
+        serde_json::from_reader::<HyperResponse, Response>(response).map_err(From::from)
     }
 }
 
@@ -119,6 +119,6 @@ mod tests {
     #[test]
     fn definitions() {
         let client = ::UrbanClient::new();
-        assert!(client.define("cat".to_owned()).is_ok());
+        assert!(client.define("cat").is_ok());
     }
 }
