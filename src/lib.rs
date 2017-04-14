@@ -24,14 +24,21 @@
 //!
 //! Retrieve a list of definitions for a word:
 //!
-//! ```rust
-//! let definitions = urbandictionary::definitions("cat");
+//! ```rust,no_run
+//! use urbandictionary::UrbanClient;
+//!
+//! let client = UrbanClient::new();
+//! let definitions = client.definitions("cat");
 //! ```
 //!
 //! Retrieve the top definition for a word:
 //!
-//! ```rust
-//! let definition = urbandictionary::define("cat");
+//! ```rust,no_run
+//! use urbandictionary::UrbanClient;
+//!
+//! let client = UrbanClient::new();
+//!
+//! let definition = client.define("cat");
 //! ```
 //!
 //! ### License
@@ -62,41 +69,56 @@ pub use model::{Definition, Response};
 use hyper::client::{Client, Response as HyperResponse};
 use hyper::header::Connection;
 
-/// Attempt to retrieve the first `Definition` for a word.
-pub fn define<S: Into<String>>(word: S) -> Result<Option<Definition>> {
-    let mut request = request(word.into())?;
-
-    Ok(if !request.definitions.is_empty() {
-        Some(request.definitions.remove(0))
-    } else {
-        None
-    })
+/// A thin wrapper around a
+#[derive(Debug, Default)]
+pub struct UrbanClient {
+    client: Client,
 }
 
-/// Attempt to retrieve the definitions of a word.
-pub fn definitions<S: Into<String>>(word: S) -> Result<Response> {
-    request(word.into())
-}
+impl UrbanClient {
+    /// Creates a new UrbanClient with a `hyper` Client instance.
+    #[inline]
+    pub fn new() -> Self {
+        Self::default()
+    }
 
-fn request(word: String) -> Result<Response> {
-    let client = Client::new();
-    // UrbanDictionary's API does not support HTTPS at this time
-    let url = format!("http://api.urbandictionary.com/v0/define?term={}", word);
+    /// Attempt to retrieve the first `Definition` for a word.
+    pub fn define<S: Into<String>>(&self, word: S) -> Result<Option<Definition>> {
+        let mut request = self.request(word.into())?;
 
-    let response = client.get(&url).header(Connection::close()).send()?;
+        Ok(if !request.definitions.is_empty() {
+            Some(request.definitions.remove(0))
+        } else {
+            None
+        })
+    }
 
-    Ok(serde_json::from_reader::<HyperResponse, Response>(response)?)
+    /// Attempt to retrieve the definitions of a word.
+    pub fn definitions<S: Into<String>>(&self, word: S) -> Result<Response> {
+        self.request(word.into())
+    }
+
+    fn request(&self, word: String) -> Result<Response> {
+        // UrbanDictionary's API does not support HTTPS at this time
+        let url = format!("http://api.urbandictionary.com/v0/define?term={}", word);
+
+        let response = self.client.get(&url).header(Connection::close()).send()?;
+
+        Ok(serde_json::from_reader::<HyperResponse, Response>(response)?)
+    }
 }
 
 #[cfg(test)]
 mod tests {
     #[test]
     fn define() {
-        assert!(::definitions("cat").is_ok());
+        let client = ::UrbanClient::new();
+        assert!(client.define("cat").is_ok());
     }
 
     #[test]
     fn definitions() {
-        assert!(::define("cat".to_owned()).is_ok());
+        let client = ::UrbanClient::new();
+        assert!(client.define("cat".to_owned()).is_ok());
     }
 }
