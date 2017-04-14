@@ -47,14 +47,14 @@
 //! [license-badge]: https://img.shields.io/badge/license-ISC-blue.svg?style=flat-square
 #![deny(missing_docs)]
 
+#[macro_use] extern crate serde_derive;
+
 extern crate hyper;
+extern crate serde;
 extern crate serde_json;
 
 mod error;
-
-mod model {
-    include!(concat!(env!("OUT_DIR"), "/model.rs"));
-}
+mod model;
 
 pub use error::{Error, Result};
 pub use model::{Definition, Response};

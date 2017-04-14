@@ -1,6 +1,5 @@
 [package]
 authors = ["Zeyla Hellyer <zey@zey.moe>"]
-build = "build.rs"
 description = "Unofficial Rust wrapper for the UrbanDictionary API"
 documentation = "https://docs.rs/crate/urbandictionary"
 homepage = "https://github.com/zeyla/urbandictionary.rs"
@@ -13,8 +12,6 @@ version = "0.1.2"
 
 [dependencies]
 hyper = ">= 0.9, ~0.10"
-serde = "0.8"
-serde_json = "0.8"
-
-[build-dependencies]
-serde_codegen = "0.8"
+serde = "0.9"
+serde_derive = "0.9"
+serde_json = "0.9"
