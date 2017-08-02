@@ -11,7 +11,7 @@ repository = "https://github.com/zeyla/urbandictionary.rs.git"
 version = "0.2.0"
 
 [dependencies]
-hyper = ">= 0.9, ~0.10"
+hyper = "0.10"
 serde = "1.0"
 serde_derive = "1.0"
 serde_json = "1.0"
