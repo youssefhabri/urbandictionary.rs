@@ -70,7 +70,7 @@ pub use model::{Definition, Response};
 use hyper::client::{Client, Response as HyperResponse};
 use hyper::header::Connection;
 
-/// A thin wrapper around a
+/// A thin wrapper around a hyper Client.
 #[derive(Debug, Default)]
 pub struct UrbanClient {
     client: Client,
