@@ -89,9 +89,9 @@ impl UrbanClient {
 
         Ok(if !request.definitions.is_empty() {
            Some(request.definitions.remove(0))
-       } else {
+        } else {
            None
-       })
+        })
     }
 
     /// Attempt to retrieve the definitions of a word.
