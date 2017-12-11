@@ -16,7 +16,7 @@
 //!
 //! And include it in your project:
 //!
-//! ```rust
+//! ```rust,no_run
 //! extern crate urbandictionary;
 //! ```
 //!
@@ -24,16 +24,45 @@
 //!
 //! Retrieve a list of definitions for a word:
 //!
-//! ```rust,no_run
-//! use urbandictionary::UrbanClient;
+//! ```rust,ignore
+//! extern crate hyper;
+//! extern crate hyper_tls;
+//! extern crate tokio_core;
 //!
-//! let client = UrbanClient::new();
-//! let definitions = client.definitions("cat");
+//! use hyper::client::{Client, HttpConnector};
+//! use hyper_tls::HttpsConnector;
+//! use tokio_tore::reactor::Core;
+//! use urbandictionary::UrbanDictionaryRequester;
+//!
+//! # use std::error::Error;
+//! #
+//! # fn try_main() -> Result<(), Box<Error>> {
+//! #
+//! let mut core = Core::new()?;
+//! let client = Client::configure()
+//!     .connector(HttpsConnector::new(4, &core.handle())?)
+//!     .build(&core.handle());
+//!
+//! let done = client.definitions("cat").and_then(|response| {
+//!     if let Some(definition) = response.definitions.first() {
+//!         println!("Examples: {}", definition.example);
+//!     }
+//!
+//!     Ok(())
+//! }).map_err(|_| ());
+//!
+//! core.run(done)?;
+//! #     Ok(())
+//! # }
+//! #
+//! # fn main() {
+//! #     try_main().unwrap();
+//! # }
 //! ```
 //!
 //! Retrieve the top definition for a word:
 //!
-//! ```rust,no_run
+//! ```rust,ignore
 //! use urbandictionary::UrbanClient;
 //!
 //! let client = UrbanClient::new();
@@ -57,7 +86,9 @@
 #[macro_use]
 extern crate serde_derive;
 
+extern crate futures;
 extern crate hyper;
+extern crate hyper_tls;
 extern crate serde;
 extern crate serde_json;
 
@@ -67,58 +98,65 @@ mod model;
 pub use error::{Error, Result};
 pub use model::{Definition, Response};
 
-use hyper::client::{Client, Response as HyperResponse};
-use hyper::header::Connection;
+use futures::{Future, Stream, future};
+use hyper::client::{Client, HttpConnector};
+use hyper::{Body, Uri};
+use hyper_tls::HttpsConnector;
+use std::str::FromStr;
 
-/// A thin wrapper around a hyper Client.
-#[derive(Debug, Default)]
-pub struct UrbanClient {
-    client: Client,
+/// Trait implemented on HTTP client(s) for interaction with the UrbanDictionary
+/// API.
+pub trait UrbanDictionaryRequester {
+    /// Attempt to retrieve the first `Definition` for a word.
+    fn define<'a>(&'a self, word: &'a str)
+        -> Box<Future<Item = Option<Definition>, Error = Error> + 'a>;
+
+    /// Attempt to retrieve the definitions of a word.
+    fn definitions<'a>(&'a self, word: &'a str)
+        -> Box<Future<Item = Response, Error = Error> + 'a>;
 }
 
-impl UrbanClient {
-    /// Creates a new UrbanClient with a `hyper` Client instance.
-    #[inline]
-    pub fn new() -> Self {
-        Self::default()
-    }
-
+impl UrbanDictionaryRequester for Client<HttpsConnector<HttpConnector>, Body> {
     /// Attempt to retrieve the first `Definition` for a word.
-    pub fn define(&self, word: &str) -> Result<Option<Definition>> {
-        let mut request = self.request(word)?;
+    fn define<'a>(&'a self, word: &'a str)
+        -> Box<Future<Item = Option<Definition>, Error = Error> + 'a> {
+        let url = format!(
+            "http://api.urbandictionary.com/v0/define?term={}",
+            word,
+        );
+        let uri = match Uri::from_str(&url) {
+            Ok(v) => v,
+            Err(why) => return Box::new(future::err(Error::Uri(why))),
+        };
 
-        Ok(if !request.definitions.is_empty() {
-           Some(request.definitions.remove(0))
-        } else {
-           None
-        })
+        Box::new(future::ok(uri)
+            .and_then(move |uri| self.get(uri))
+            .and_then(|res| res.body().concat2())
+            .map_err(From::from)
+            .and_then(|body| serde_json::from_slice::<Response>(&body).map_err(From::from))
+            .map(|mut resp| if !resp.definitions.is_empty() {
+                Some(resp.definitions.remove(0))
+            } else {
+                None
+            }))
     }
 
     /// Attempt to retrieve the definitions of a word.
-    pub fn definitions(&self, word: &str) -> Result<Response> {
-        self.request(word.into())
-    }
+    fn definitions<'a>(&'a self, word: &'a str)
+        -> Box<Future<Item = Response, Error = Error> + 'a> {
+        let url = format!(
+            "http://api.urbandictionary.com/v0/define?term={}",
+            word,
+        );
+        let uri = match Uri::from_str(&url) {
+            Ok(v) => v,
+            Err(why) => return Box::new(future::err(Error::Uri(why))),
+        };
 
-    fn request(&self, word: &str) -> Result<Response> {
-        // UrbanDictionary's API does not support HTTPS at this time.
-        let url = format!("http://api.urbandictionary.com/v0/define?term={}", word);
-        let response = self.client.get(&url).header(Connection::close()).send()?;
-
-        serde_json::from_reader::<HyperResponse, Response>(response).map_err(From::from)
-    }
-}
-
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn define() {
-        let client = ::UrbanClient::new();
-        assert!(client.define("cat").is_ok());
-    }
-
-    #[test]
-    fn definitions() {
-        let client = ::UrbanClient::new();
-        assert!(client.define("cat").is_ok());
+        Box::new(future::ok(uri)
+            .and_then(move |uri| self.get(uri))
+            .and_then(|res| res.body().concat2())
+            .map_err(From::from)
+            .and_then(|body| serde_json::from_slice(&body).map_err(From::from)))
     }
 }

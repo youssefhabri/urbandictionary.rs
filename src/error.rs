@@ -1,4 +1,4 @@
-use hyper::Error as HyperError;
+use hyper::error::{Error as HyperError, UriError};
 use serde_json::Error as JsonError;
 use std::io::Error as IoError;
 use std::error::Error as StdError;
@@ -18,6 +18,8 @@ pub enum Error {
     Json(JsonError),
     /// A `std::io` module error
     Io(IoError),
+    /// An error from `hyper` while parsing a URI.
+    Uri(UriError),
 }
 
 impl From<IoError> for Error {
@@ -38,12 +40,19 @@ impl From<JsonError> for Error {
     }
 }
 
+impl From<UriError> for Error {
+    fn from(err: UriError) -> Error {
+        Error::Uri(err)
+    }
+}
+
 impl Display for Error {
     fn fmt(&self, f: &mut Formatter) -> FmtResult {
         match *self {
             Error::Hyper(ref inner) => inner.fmt(f),
             Error::Json(ref inner) => inner.fmt(f),
             Error::Io(ref inner) => inner.fmt(f),
+            Error::Uri(ref inner) => inner.fmt(f),
         }
     }
 }
@@ -54,14 +63,7 @@ impl StdError for Error {
             Error::Hyper(ref inner) => inner.description(),
             Error::Json(ref inner) => inner.description(),
             Error::Io(ref inner) => inner.description(),
-        }
-    }
-
-    fn cause(&self) -> Option<&StdError> {
-        match *self {
-            Error::Hyper(ref inner) => Some(inner),
-            Error::Json(ref inner) => Some(inner),
-            Error::Io(ref inner) => Some(inner),
+            Error::Uri(ref inner) => inner.description(),
         }
     }
 }
