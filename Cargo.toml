@@ -11,12 +11,30 @@ repository = "https://github.com/zeyla/urbandictionary.rs.git"
 version = "0.2.0"
 
 [dependencies]
-futures = "~0.1"
-hyper = "~0.11"
-hyper-tls = "~0.1"
 serde = "^1.0"
 serde_derive = "^1.0"
 serde_json = "^1.0"
 
+[dependencies.futures]
+optional = true
+version = "~0.1"
+
+[dependencies.hyper]
+optional = true
+version = "~0.11"
+
+[dependencies.hyper-tls]
+optional = true
+version = "~0.1"
+
+[dependencies.reqwest]
+optional = true
+version = "~0.8"
+
 [dev-dependencies]
 tokio-core = "~0.1"
+
+[features]
+default = ["reqwest-support"]
+hyper-support = ["futures", "hyper", "hyper-tls"]
+reqwest-support = ["reqwest"]
