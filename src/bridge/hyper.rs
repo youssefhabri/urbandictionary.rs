@@ -13,35 +13,37 @@ use ::Error;
 /// API.
 pub trait UrbanDictionaryRequester {
     /// Attempt to retrieve the first `Definition` for a word.
-    fn define<'a>(&'a self, word: &'a str)
+    fn define<'a, S: Into<String>>(&'a self, word: S)
         -> Box<Future<Item = Option<Definition>, Error = Error> + 'a>;
 
     /// Attempt to retrieve the definitions of a word.
-    fn definitions<'a>(&'a self, word: &'a str)
+    fn definitions<'a, S: Into<String>>(&'a self, word: S)
         -> Box<Future<Item = Response, Error = Error> + 'a>;
 }
 
 impl UrbanDictionaryRequester for Client<HttpsConnector<HttpConnector>, Body> {
     /// Attempt to retrieve the first `Definition` for a word.
     #[inline]
-    fn define<'a>(&'a self, word: &'a str)
+    fn define<'a, S: Into<String>>(&'a self, word: S)
         -> Box<Future<Item = Option<Definition>, Error = Error> + 'a> {
         define(self, word)
     }
 
     /// Attempt to retrieve the definitions of a word.
     #[inline]
-    fn definitions<'a>(&'a self, word: &'a str)
+    fn definitions<'a, S: Into<String>>(&'a self, word: S)
         -> Box<Future<Item = Response, Error = Error> + 'a> {
         definitions(self, word)
     }
 }
 
 /// Attempt to retrieve the first `Definition` for a word.
-pub fn define<'a>(
+pub fn define<'a, S: Into<String>>(
     client: &'a Client<HttpsConnector<HttpConnector>, Body>,
-    word: &'a str,
+    word: S,
 ) -> Box<Future<Item = Option<Definition>, Error = Error> + 'a> {
+    let word = word.into();
+
     let url = format!(
         "http://api.urbandictionary.com/v0/define?term={}",
         word,
@@ -64,10 +66,11 @@ pub fn define<'a>(
 }
 
 /// Attempt to retrieve the definitions of a word.
-pub fn definitions<'a>(
+pub fn definitions<'a, S: Into<String>>(
     client: &'a Client<HttpsConnector<HttpConnector>, Body>,
-    word: &'a str,
+    word: S,
 ) -> Box<Future<Item = Response, Error = Error> + 'a> {
+    let word = word.into();
 
     let url = format!(
         "http://api.urbandictionary.com/v0/define?term={}",
