@@ -13,37 +13,34 @@ use ::Error;
 /// API.
 pub trait UrbanDictionaryRequester {
     /// Attempt to retrieve the first `Definition` for a word.
-    fn define<'a, S: Into<String>>(&'a self, word: S)
-        -> Box<Future<Item = Option<Definition>, Error = Error> + 'a>;
+    fn define(&self, word: &str)
+        -> Box<Future<Item = Option<Definition>, Error = Error>>;
 
     /// Attempt to retrieve the definitions of a word.
-    fn definitions<'a, S: Into<String>>(&'a self, word: S)
-        -> Box<Future<Item = Response, Error = Error> + 'a>;
+    fn definitions(&self, word: &str)
+        -> Box<Future<Item = Response, Error = Error>>;
 }
 
 impl UrbanDictionaryRequester for Client<HttpsConnector<HttpConnector>, Body> {
     /// Attempt to retrieve the first `Definition` for a word.
-    #[inline]
-    fn define<'a, S: Into<String>>(&'a self, word: S)
-        -> Box<Future<Item = Option<Definition>, Error = Error> + 'a> {
-        define(self, word)
+    fn define(&self, word: &str)
+        -> Box<Future<Item = Option<Definition>, Error = Error>> {
+        Box::new(define(self, word))
     }
 
     /// Attempt to retrieve the definitions of a word.
     #[inline]
-    fn definitions<'a, S: Into<String>>(&'a self, word: S)
-        -> Box<Future<Item = Response, Error = Error> + 'a> {
-        definitions(self, word)
+    fn definitions(&self, word: &str)
+        -> Box<Future<Item = Response, Error = Error>> {
+        Box::new(definitions(self, word))
     }
 }
 
 /// Attempt to retrieve the first `Definition` for a word.
-pub fn define<'a, S: Into<String>>(
-    client: &'a Client<HttpsConnector<HttpConnector>, Body>,
-    word: S,
-) -> Box<Future<Item = Option<Definition>, Error = Error> + 'a> {
-    let word = word.into();
-
+pub fn define(
+    client: &Client<HttpsConnector<HttpConnector>, Body>,
+    word: &str,
+) -> Box<Future<Item = Option<Definition>, Error = Error>> {
     let url = format!(
         "http://api.urbandictionary.com/v0/define?term={}",
         word,
@@ -53,8 +50,7 @@ pub fn define<'a, S: Into<String>>(
         Err(why) => return Box::new(future::err(Error::Uri(why))),
     };
 
-    Box::new(future::ok(uri)
-        .and_then(move |uri| client.get(uri))
+    Box::new(client.get(uri)
         .and_then(|res| res.body().concat2())
         .map_err(From::from)
         .and_then(|body| serde_json::from_slice::<Response>(&body).map_err(From::from))
@@ -66,12 +62,10 @@ pub fn define<'a, S: Into<String>>(
 }
 
 /// Attempt to retrieve the definitions of a word.
-pub fn definitions<'a, S: Into<String>>(
-    client: &'a Client<HttpsConnector<HttpConnector>, Body>,
-    word: S,
-) -> Box<Future<Item = Response, Error = Error> + 'a> {
-    let word = word.into();
-
+pub fn definitions(
+    client: &Client<HttpsConnector<HttpConnector>, Body>,
+    word: &str,
+) -> Box<Future<Item = Response, Error = Error>> {
     let url = format!(
         "http://api.urbandictionary.com/v0/define?term={}",
         word,
@@ -81,8 +75,7 @@ pub fn definitions<'a, S: Into<String>>(
         Err(why) => return Box::new(future::err(Error::Uri(why))),
     };
 
-    Box::new(future::ok(uri)
-        .and_then(move |uri| client.get(uri))
+    Box::new(client.get(uri)
         .and_then(|res| res.body().concat2())
         .map_err(From::from)
         .and_then(|body| serde_json::from_slice(&body).map_err(From::from)))
