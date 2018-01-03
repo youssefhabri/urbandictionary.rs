@@ -23,18 +23,15 @@ version = "~0.1"
 optional = true
 version = "~0.11"
 
-[dependencies.hyper-tls]
-optional = true
-version = "~0.1"
-
 [dependencies.reqwest]
 optional = true
 version = "~0.8"
 
 [dev-dependencies]
+hyper-tls = "~0.1"
 tokio-core = "~0.1"
 
 [features]
 default = ["reqwest-support"]
-hyper-support = ["futures", "hyper", "hyper-tls"]
+hyper-support = ["futures", "hyper"]
 reqwest-support = ["reqwest"]

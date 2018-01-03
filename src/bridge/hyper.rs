@@ -1,9 +1,8 @@
 //! Support for the `hyper` crate.
 
 use futures::{Future, Stream, future};
-use hyper::client::{Client, HttpConnector};
-use hyper::{Body, Uri};
-use hyper_tls::HttpsConnector;
+use hyper::client::{Client, Connect};
+use hyper::{Error as HyperError, Uri};
 use serde_json;
 use std::str::FromStr;
 use ::model::{Definition, Response};
@@ -13,37 +12,42 @@ use ::Error;
 /// API.
 pub trait UrbanDictionaryRequester {
     /// Attempt to retrieve the first `Definition` for a word.
-    fn define(&self, word: &str)
+    fn define<T: AsRef<str>>(&self, word: T)
         -> Box<Future<Item = Option<Definition>, Error = Error>>;
 
     /// Attempt to retrieve the definitions of a word.
-    fn definitions(&self, word: &str)
+    fn definitions<T: AsRef<str>>(&self, word: T)
         -> Box<Future<Item = Response, Error = Error>>;
 }
 
-impl UrbanDictionaryRequester for Client<HttpsConnector<HttpConnector>, Body> {
+impl<B, C: Connect> UrbanDictionaryRequester for Client<C, B>
+    where B: Stream<Error = HyperError> + 'static, B::Item: AsRef<[u8]> {
     /// Attempt to retrieve the first `Definition` for a word.
-    fn define(&self, word: &str)
+    fn define<T: AsRef<str>>(&self, word: T)
         -> Box<Future<Item = Option<Definition>, Error = Error>> {
         Box::new(define(self, word))
     }
 
     /// Attempt to retrieve the definitions of a word.
     #[inline]
-    fn definitions(&self, word: &str)
+    fn definitions<T: AsRef<str>>(&self, word: T)
         -> Box<Future<Item = Response, Error = Error>> {
         Box::new(definitions(self, word))
     }
 }
 
 /// Attempt to retrieve the first `Definition` for a word.
-pub fn define(
-    client: &Client<HttpsConnector<HttpConnector>, Body>,
-    word: &str,
-) -> Box<Future<Item = Option<Definition>, Error = Error>> {
+pub fn define<B, C, T> (
+    client: &Client<C, B>,
+    word: T,
+) -> Box<Future<Item = Option<Definition>, Error = Error>>
+    where C: Connect,
+          B: Stream<Error = HyperError> + 'static,
+          B::Item: AsRef<[u8]>,
+          T: AsRef<str> {
     let url = format!(
         "http://api.urbandictionary.com/v0/define?term={}",
-        word,
+        word.as_ref(),
     );
     let uri = match Uri::from_str(&url) {
         Ok(v) => v,
@@ -62,13 +66,17 @@ pub fn define(
 }
 
 /// Attempt to retrieve the definitions of a word.
-pub fn definitions(
-    client: &Client<HttpsConnector<HttpConnector>, Body>,
-    word: &str,
-) -> Box<Future<Item = Response, Error = Error>> {
+pub fn definitions<B, C, T>(
+    client: &Client<C, B>,
+    word: T,
+) -> Box<Future<Item = Response, Error = Error>>
+    where C: Connect,
+          B: Stream<Error = HyperError> + 'static,
+          B::Item: AsRef<[u8]>,
+          T: AsRef<str> {
     let url = format!(
         "http://api.urbandictionary.com/v0/define?term={}",
-        word,
+        word.as_ref(),
     );
     let uri = match Uri::from_str(&url) {
         Ok(v) => v,
