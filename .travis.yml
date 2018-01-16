@@ -1,15 +1,15 @@
 language: rust
 rust:
-    - stable
-    - beta
-    - nightly
+  - stable
+  - beta
+  - nightly
 sudo: false
 os:
-    - linux
+  - linux
 cache:
-    directories:
-        - $TRAVIS_BUILD_DIR/target
-        - $HOME/.cargo
+  directories:
+    - $TRAVIS_BUILD_DIR/target
+    - $HOME/.cargo
 
 script:
-    - cargo test
+  - cargo test
