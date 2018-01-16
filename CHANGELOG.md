@@ -2,6 +2,13 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.3.0] - 2017-01-16
+
+### Changed
+
+- Rewrite the library; now includes trait requester implementations for
+hyper v0.11's Client and Reqwest v0.8's client
+
 ## [0.2.0] - 2017-08-02
 
 ### Changed

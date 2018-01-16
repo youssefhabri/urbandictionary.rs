@@ -9,7 +9,7 @@ keywords = ["definitions", "dictionary", "urbandictionary", "urban"]
 name = "urbandictionary"
 readme = "README.md"
 repository = "https://github.com/zeyla/urbandictionary.rs.git"
-version = "0.2.0"
+version = "0.3.0"
 
 [badges.maintenance]
 status = "actively-developed"

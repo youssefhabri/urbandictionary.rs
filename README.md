@@ -11,7 +11,7 @@ Unofficial Rust crate for the Urbandictionary API.
 Add the following dependency to your Cargo.toml:
 
 ```toml
-urbandictionary = "0.2"
+urbandictionary = "0.3"
 ```
 
 And include it in your project:
