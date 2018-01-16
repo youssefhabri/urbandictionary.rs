@@ -19,17 +19,20 @@ pub trait UrbanDictionaryRequester {
     /// `"cat"`, if it exists:
     ///
     /// ```rust,no_run
+    /// extern crate futures;
     /// extern crate hyper;
     /// extern crate hyper_tls;
     /// extern crate tokio_core;
+    /// extern crate urbandictionary;
     ///
     /// # use std::error::Error;
     /// #
     /// # fn try_main() -> Result<(), Box<Error>> {
     /// #
+    /// use futures::Future;
     /// use hyper::client::{Client, HttpConnector};
     /// use hyper_tls::HttpsConnector;
-    /// use tokio_tore::reactor::Core;
+    /// use tokio_core::reactor::Core;
     /// use urbandictionary::HyperUrbanDictionaryRequester;
     ///
     /// let mut core = Core::new()?;
@@ -45,7 +48,7 @@ pub trait UrbanDictionaryRequester {
     ///     ()
     /// }).map_err(|_| ());
     ///
-    /// core.run(done)?;
+    /// core.run(done).expect("Error running core");
     /// #     Ok(())
     /// # }
     /// #
@@ -64,17 +67,20 @@ pub trait UrbanDictionaryRequester {
     /// the word `"cat"`, if it exists:
     ///
     /// ```rust,no_run
+    /// extern crate futures;
     /// extern crate hyper;
     /// extern crate hyper_tls;
     /// extern crate tokio_core;
+    /// extern crate urbandictionary;
     ///
     /// # use std::error::Error;
     /// #
     /// # fn try_main() -> Result<(), Box<Error>> {
     /// #
+    /// use futures::Future;
     /// use hyper::client::{Client, HttpConnector};
     /// use hyper_tls::HttpsConnector;
-    /// use tokio_tore::reactor::Core;
+    /// use tokio_core::reactor::Core;
     /// use urbandictionary::HyperUrbanDictionaryRequester;
     ///
     /// let mut core = Core::new()?;
@@ -90,7 +96,7 @@ pub trait UrbanDictionaryRequester {
     ///     ()
     /// }).map_err(|_| ());
     ///
-    /// core.run(done)?;
+    /// core.run(done).expect("Error running core");
     /// #     Ok(())
     /// # }
     /// #
