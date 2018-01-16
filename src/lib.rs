@@ -129,12 +129,11 @@ extern crate hyper_tls;
 extern crate reqwest;
 
 pub mod bridge;
+pub mod model;
 
 mod error;
-mod model;
 
 pub use error::{Error, Result};
-pub use model::{Definition, Response};
 
 #[cfg(feature = "hyper-support")]
 pub use bridge::hyper::UrbanDictionaryRequester as HyperUrbanDictionaryRequester;

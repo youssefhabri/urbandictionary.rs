@@ -1,3 +1,5 @@
+//! Models mapping the UrbanDictionary API's response types.
+
 /// A definition and example for a word, including metadata such as the author's
 /// name and the definition's rating.
 #[derive(Clone, Debug, Deserialize)]
