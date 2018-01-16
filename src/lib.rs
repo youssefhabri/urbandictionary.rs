@@ -75,7 +75,7 @@
 //! License info in [LICENSE.md]. Long story short, ISC.
 //!
 //! [ci]: https://travis-ci.org/zeyla/urbandictionary.rs
-//! [ci-badge]: https://travis-ci.org/zeyla/urbandictionary.svg?branch=master
+//! [ci-badge]: https://travis-ci.org/zeyla/urbandictionary.rs.svg?branch=master
 //! [docs]: https://docs.rs/crate/urbandictionary
 //! [docs-badge]: https://img.shields.io/badge/docs-online-2020ff.svg
 //! [LICENSE.md]: https://github.com/zeyla/urbandictionary.rs/blob/master/LICENSE.md
