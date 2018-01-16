@@ -1,5 +1,6 @@
 [package]
 authors = ["Zeyla Hellyer <zey@zey.moe>"]
+categories = ["api-bindings", "web-programming"]
 description = "Unofficial Rust wrapper for the UrbanDictionary API"
 documentation = "https://docs.rs/crate/urbandictionary"
 homepage = "https://github.com/zeyla/urbandictionary.rs"
@@ -9,6 +10,9 @@ name = "urbandictionary"
 readme = "README.md"
 repository = "https://github.com/zeyla/urbandictionary.rs.git"
 version = "0.2.0"
+
+[badges.maintenance]
+status = "actively-developed"
 
 [dependencies]
 serde = "^1.0"
