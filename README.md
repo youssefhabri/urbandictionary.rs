@@ -22,22 +22,74 @@ extern crate urbandictionary;
 
 ### Examples
 
-Retrieve a list of definitions for a word:
+Using `hyper` with the `hyper-tls` HTTPS connector, retrieve a list of
+definitions for a word and print the example of the second definition if it
+exists:
 
 ```rust
-use urbandictionary::UrbanClient;
+extern crate futures;
+extern crate hyper;
+extern crate hyper_tls;
+extern crate tokio_core;
+extern crate urbandictionary;
 
-let client = UrbanClient::new();
-let definitions = client.definitions("cat").unwrap();
+use futures::Future;
+use hyper::client::{Client, HttpConnector};
+use hyper_tls::HttpsConnector;
+use std::error::Error;
+use tokio_core::reactor::Core;
+use urbandictionary::HyperUrbanDictionaryRequester;
+
+fn try_main() -> Result<(), Box<Error>> {
+    let mut core = Core::new()?;
+    let client = Client::configure()
+        .connector(HttpsConnector::new(4, &core.handle())?)
+        .build(&core.handle());
+
+    let done = client.definitions("cat").and_then(|response| {
+        if let Some(definition) = response.definitions.get(1) {
+            println!("Examples: {}", definition.example);
+        }
+
+        Ok(())
+    }).map_err(|_| ());
+
+    core.run(done).expect("Error running core");
+
+    Ok(())
+}
+
+fn main() {
+    try_main().unwrap();
+}
 ```
 
-Retrieve the top definition for a word:
+Using reqwest, print the definition of the word `"cat"`:
 
 ```rust
-use urbandictionary::UrbanClient;
+extern crate reqwest;
+extern crate urbandictionary;
 
-let client = UrbanClient::new();
-let definition = client.define("cat").unwrap();
+use reqwest::Client;
+use std::error::Error;
+use urbandictionary::ReqwestUrbanDictionaryRequester;
+
+fn try_main() -> Result<(), Box<Error>> {
+    let client = Client::new();
+    let response = client.define("cat")?;
+
+    if let Some(definition) = response {
+        println!("The definition of cat is: {}", definition.definition);
+    } else {
+        println!("No definition found");
+    }
+
+    Ok(())
+}
+
+fn main() {
+    try_main().unwrap();
+}
 ```
 
 ### License
