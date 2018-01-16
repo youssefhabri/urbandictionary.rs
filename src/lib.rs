@@ -22,29 +22,35 @@
 //!
 //! ### Examples
 //!
-//! Retrieve a list of definitions for a word:
+//! Using `hyper` with the `hyper-tls` HTTPS connector, retrieve a list of
+//! definitions for a word and print the example of the second definition if it
+//! exists:
 //!
-//! ```rust,ignore
+//! ```rust,no_run
+//! # #[cfg(feature = "hyper-support")]
 //! extern crate hyper;
+//! # #[cfg(feature = "hyper-support")]
 //! extern crate hyper_tls;
+//! # #[cfg(feature = "hyper-support")]
 //! extern crate tokio_core;
-//!
-//! use hyper::client::{Client, HttpConnector};
-//! use hyper_tls::HttpsConnector;
-//! use tokio_tore::reactor::Core;
-//! use urbandictionary::UrbanDictionaryRequester;
 //!
 //! # use std::error::Error;
 //! #
+//! # #[cfg(feature = "hyper-support")]
 //! # fn try_main() -> Result<(), Box<Error>> {
 //! #
+//! use hyper::client::{Client, HttpConnector};
+//! use hyper_tls::HttpsConnector;
+//! use tokio_tore::reactor::Core;
+//! use urbandictionary::HyperUrbanDictionaryRequester;
+//!
 //! let mut core = Core::new()?;
 //! let client = Client::configure()
 //!     .connector(HttpsConnector::new(4, &core.handle())?)
 //!     .build(&core.handle());
 //!
 //! let done = client.definitions("cat").and_then(|response| {
-//!     if let Some(definition) = response.definitions.first() {
+//!     if let Some(definition) = response.definitions.get(1) {
 //!         println!("Examples: {}", definition.example);
 //!     }
 //!
@@ -56,18 +62,43 @@
 //! # }
 //! #
 //! # fn main() {
-//! #     try_main().unwrap();
+//! #    #[cfg(feature = "hyper-support")]
+//! #    try_main().unwrap();
 //! # }
 //! ```
 //!
-//! Retrieve the top definition for a word:
+//! Using reqwest, print the definition of the word `"cat"`:
 //!
-//! ```rust,ignore
-//! use urbandictionary::UrbanClient;
+//! ```rust,no_run
+//! # #[cfg(feature = "reqwest-support")]
+//! #
+//! extern crate reqwest;
+//! extern crate urbandictionary;
 //!
-//! let client = UrbanClient::new();
+//! # use std::error::Error;
+//! #
+//! # #[cfg(feature = "reqwest-support")]
+//! # fn try_main() -> Result<(), Box<Error>> {
+//! #
 //!
-//! let definition = client.define("cat");
+//! use reqwest::Client;
+//! use urbandictionary::ReqwestUrbanDictionaryRequester;
+//!
+//! let client = Client::new();
+//! let response = client.define("cat")?;
+//!
+//! if let Some(definition) = response {
+//!     println!("The definition of cat is: {}", definition.definition);
+//! } else {
+//!     println!("No definition found");
+//! }
+//! #     Ok(())
+//! # }
+//! #
+//! # fn main() {
+//! #     #[cfg(feature = "reqwest-support")]
+//! #     try_main().unwrap();
+//! # }
 //! ```
 //!
 //! ### License

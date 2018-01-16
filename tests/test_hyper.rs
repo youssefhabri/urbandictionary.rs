@@ -11,7 +11,7 @@ use hyper::client::HttpConnector;
 use hyper::{Body, Client};
 use hyper_tls::HttpsConnector;
 use tokio_core::reactor::{Core, Handle};
-use urbandictionary::UrbanDictionaryRequester;
+use urbandictionary::HyperUrbanDictionaryRequester;
 
 #[inline]
 fn client(handle: &Handle) -> Client<HttpsConnector<HttpConnector>, Body> {
@@ -20,6 +20,7 @@ fn client(handle: &Handle) -> Client<HttpsConnector<HttpConnector>, Body> {
         .build(handle)
 }
 
+#[ignore]
 #[test]
 fn test_define() {
     let mut core = Core::new().unwrap();
@@ -38,6 +39,7 @@ fn test_define() {
     core.run(done).expect("core err");
 }
 
+#[ignore]
 #[test]
 fn test_definitions() {
     let mut core = Core::new().unwrap();
