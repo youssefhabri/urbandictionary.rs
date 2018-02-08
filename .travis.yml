@@ -12,4 +12,4 @@ cache:
     - $HOME/.cargo
 
 script:
-  - cargo test
+  - cargo test --all-features -- --ignored
