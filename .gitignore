@@ -1,1 +1,6 @@
+# cargo
+Cargo.lock
 target/
+
+# rustfmt
+src/**/*.bkp
