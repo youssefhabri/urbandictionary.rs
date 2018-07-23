@@ -36,5 +36,5 @@ pub struct Response {
     #[serde(rename="list")]
     pub definitions: Vec<Definition>,
     /// A list of tags that the word has been tagged with.
-    pub tags: Vec<String>,
+    pub tags: Option<Vec<String>>,
 }
