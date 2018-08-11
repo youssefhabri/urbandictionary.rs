@@ -1,5 +1,5 @@
 [package]
-authors = ["Zeyla Hellyer <zey@zey.moe>"]
+authors = ["Zeyla Hellyer <hi@zeyla.me>"]
 categories = ["api-bindings", "web-programming"]
 description = "Unofficial Rust wrapper for the UrbanDictionary API"
 documentation = "https://docs.rs/crate/urbandictionary"
