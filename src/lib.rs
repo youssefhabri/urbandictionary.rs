@@ -110,9 +110,9 @@
 //! License info in [LICENSE.md]. Long story short, ISC.
 //!
 //! [ci]: https://travis-ci.org/zeyla/urbandictionary.rs
-//! [ci-badge]: https://travis-ci.org/zeyla/urbandictionary.rs.svg?branch=master
+//! [ci-badge]: https://img.shields.io/travis/zeyla/urbandictionary.rs.svg?style=flat-square
 //! [docs]: https://docs.rs/crate/urbandictionary
-//! [docs-badge]: https://img.shields.io/badge/docs-online-2020ff.svg
+//! [docs-badge]: https://img.shields.io/badge/docs-online-2020ff.svg?style=flat-square
 //! [LICENSE.md]: https://github.com/zeyla/urbandictionary.rs/blob/master/LICENSE.md
 //! [license]: https://opensource.org/licenses/ISC
 //! [license-badge]: https://img.shields.io/badge/license-ISC-blue.svg?style=flat-square
