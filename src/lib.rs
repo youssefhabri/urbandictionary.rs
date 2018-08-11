@@ -1,4 +1,4 @@
-//! [![ci-badge][]][ci] [![license-badge][]][license] [![docs-badge][]][docs]
+//! [![ci-badge][]][ci] [![license-badge][]][license] [![docs-badge][]][docs] [![rust badge]][rust link]
 //!
 //! # urbandictionary.rs
 //!
@@ -116,6 +116,8 @@
 //! [LICENSE.md]: https://github.com/zeyla/urbandictionary.rs/blob/master/LICENSE.md
 //! [license]: https://opensource.org/licenses/ISC
 //! [license-badge]: https://img.shields.io/badge/license-ISC-blue.svg?style=flat-square
+//! [rust badge]: https://img.shields.io/badge/rust-1.21+-93450a.svg?style=flat-square
+//! [rust link]: https://blog.rust-lang.org/2017/10/12/Rust-1.21.html
 #![deny(missing_docs)]
 
 #[macro_use] extern crate serde_derive;

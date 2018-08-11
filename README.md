@@ -1,4 +1,4 @@
-[![ci-badge][]][ci] [![license-badge][]][license] [![docs-badge][]][docs]
+[![ci-badge][]][ci] [![license-badge][]][license] [![docs-badge][]][docs] [![rust badge]][rust link]
 
 # urbandictionary.rs
 
@@ -7,6 +7,8 @@ Unofficial Rust crate for the Urbandictionary API.
 [Documentation][docs]
 
 ### Installation
+
+This library requires at least Rust 1.21.
 
 Add the following dependency to your Cargo.toml:
 
@@ -103,3 +105,5 @@ License info in [LICENSE.md]. Long story short, ISC.
 [LICENSE.md]: https://github.com/zeyla/urbandictionary.rs/blob/master/LICENSE.md
 [license]: https://opensource.org/licenses/ISC
 [license-badge]: https://img.shields.io/badge/license-ISC-blue.svg?style=flat-square
+[rust badge]: https://img.shields.io/badge/rust-1.21+-93450a.svg?style=flat-square
+[rust link]: https://blog.rust-lang.org/2017/10/12/Rust-1.21.html
