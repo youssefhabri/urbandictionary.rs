@@ -8,8 +8,8 @@
 
 use reqwest::Client;
 use serde_json;
-use ::model::{Definition, Response};
-use ::Result;
+use crate::model::{Definition, Response};
+use crate::Result;
 
 /// Trait implemented on Reqwest's client for interaction with the
 /// UrbanDictionary API.

@@ -139,9 +139,9 @@ pub mod model;
 
 mod error;
 
-pub use error::{Error, Result};
+pub use crate::error::{Error, Result};
 
 #[cfg(feature = "hyper-support")]
-pub use bridge::hyper::UrbanDictionaryRequester as HyperUrbanDictionaryRequester;
+pub use crate::bridge::hyper::UrbanDictionaryRequester as HyperUrbanDictionaryRequester;
 #[cfg(feature = "reqwest-support")]
-pub use bridge::reqwest::UrbanDictionaryRequester as ReqwestUrbanDictionaryRequester;
+pub use crate::bridge::reqwest::UrbanDictionaryRequester as ReqwestUrbanDictionaryRequester;

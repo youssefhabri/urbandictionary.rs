@@ -11,6 +11,7 @@ publish = false
 readme = "README.md"
 repository = "https://github.com/zeyla/urbandictionary.rs.git"
 version = "0.3.1"
+edition = "2018"
 
 [badges.maintenance]
 status = "actively-developed"
@@ -30,7 +31,7 @@ version = "~0.11"
 
 [dependencies.reqwest]
 optional = true
-version = "~0.8"
+version = "~0.9"
 
 [dev-dependencies]
 hyper-tls = "~0.1"
@@ -40,3 +41,6 @@ tokio-core = "~0.1"
 default = ["reqwest-support"]
 hyper-support = ["futures", "hyper"]
 reqwest-support = ["reqwest"]
+
+[patch.crates-io]
+openssl = { git = "https://github.com/ishitatsuyuki/rust-openssl", branch = "0.9.x" }

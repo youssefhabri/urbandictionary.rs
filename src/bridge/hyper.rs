@@ -5,8 +5,8 @@ use hyper::client::{Client, Connect};
 use hyper::{Error as HyperError, Uri};
 use serde_json;
 use std::str::FromStr;
-use ::model::{Definition, Response};
-use ::Error;
+use crate::model::{Definition, Response};
+use crate::Error;
 
 /// Trait implemented on Hyper's client for interaction with the UrbanDictionary
 /// API.
