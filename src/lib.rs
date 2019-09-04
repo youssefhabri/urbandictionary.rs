@@ -120,7 +120,8 @@
 //! [rust link]: https://blog.rust-lang.org/2017/10/12/Rust-1.21.html
 #![deny(missing_docs)]
 
-#[macro_use] extern crate serde_derive;
+#[macro_use]
+extern crate serde_derive;
 
 extern crate serde;
 extern crate serde_json;

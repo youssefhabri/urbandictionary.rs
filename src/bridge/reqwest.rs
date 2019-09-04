@@ -6,10 +6,10 @@
 //!
 //! [`UrbanDictionaryRequester`]: trait.UrbanDictionaryRequester.html
 
-use reqwest::Client;
-use serde_json;
 use crate::model::{Definition, Response};
 use crate::Result;
+use reqwest::Client;
+use serde_json;
 
 /// Trait implemented on Reqwest's client for interaction with the
 /// UrbanDictionary API.

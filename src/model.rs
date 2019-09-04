@@ -12,7 +12,7 @@ pub struct Definition {
     /// that the word can be used in.
     pub example: String,
     /// The Id of the defintion.
-    #[serde(rename="defid")]
+    #[serde(rename = "defid")]
     pub id: u64,
     /// A permanent link to the definition.
     pub permalink: String,
@@ -33,7 +33,7 @@ pub struct Response {
     /// A list of definitions for a request, made via a call to [`definitions`].
     ///
     /// [`definitions`]: fn.definitions.html
-    #[serde(rename="list")]
+    #[serde(rename = "list")]
     pub definitions: Vec<Definition>,
     /// A list of tags that the word has been tagged with.
     pub tags: Option<Vec<String>>,

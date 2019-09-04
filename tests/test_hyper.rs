@@ -26,15 +26,18 @@ fn test_define() {
     let mut core = Core::new().unwrap();
     let client = client(&core.handle());
 
-    let done = client.define("cat").and_then(|resp| {
-        assert!(resp.is_some());
+    let done = client
+        .define("cat")
+        .and_then(|resp| {
+            assert!(resp.is_some());
 
-        Ok(())
-    }).or_else(|_| {
-        assert!(false);
+            Ok(())
+        })
+        .or_else(|_| {
+            assert!(false);
 
-        Err(())
-    });
+            Err(())
+        });
 
     core.run(done).expect("core err");
 }
@@ -45,15 +48,18 @@ fn test_definitions() {
     let mut core = Core::new().unwrap();
     let client = client(&core.handle());
 
-    let done = client.definitions("cat").and_then(|resp| {
-        assert!(resp.definitions.len() > 0);
+    let done = client
+        .definitions("cat")
+        .and_then(|resp| {
+            assert!(resp.definitions.len() > 0);
 
-        Ok(())
-    }).or_else(|_| {
-        assert!(false);
+            Ok(())
+        })
+        .or_else(|_| {
+            assert!(false);
 
-        Err(())
-    });
+            Err(())
+        });
 
     core.run(done).expect("core err");
 }

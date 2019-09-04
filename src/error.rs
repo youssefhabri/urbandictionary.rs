@@ -1,7 +1,7 @@
 use serde_json::Error as JsonError;
-use std::io::Error as IoError;
 use std::error::Error as StdError;
 use std::fmt::{Display, Formatter, Result as FmtResult};
+use std::io::Error as IoError;
 use std::result::Result as StdResult;
 
 #[cfg(feature = "hyper-support")]
