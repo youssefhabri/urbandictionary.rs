@@ -72,7 +72,7 @@ Using reqwest, print the definition of the word `"cat"`:
 extern crate reqwest;
 extern crate urbandictionary;
 
-use reqwest::Client;
+use reqwest::blocking::Client;
 use std::error::Error;
 use urbandictionary::ReqwestUrbanDictionaryRequester;
 
@@ -102,7 +102,7 @@ License info in [LICENSE.md]. Long story short, ISC.
 [ci-badge]: https://img.shields.io/travis/zeyla/urbandictionary.rs.svg?style=flat-square
 [docs]: https://docs.rs/crate/urbandictionary
 [docs-badge]: https://img.shields.io/badge/docs-online-2020ff.svg?style=flat-square
-[LICENSE.md]: https://github.com/zeyla/urbandictionary.rs/blob/master/LICENSE.md
+[license.md]: https://github.com/zeyla/urbandictionary.rs/blob/master/LICENSE.md
 [license]: https://opensource.org/licenses/ISC
 [license-badge]: https://img.shields.io/badge/license-ISC-blue.svg?style=flat-square
 [rust badge]: https://img.shields.io/badge/rust-1.21+-93450a.svg?style=flat-square

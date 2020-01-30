@@ -3,7 +3,7 @@
 extern crate reqwest;
 extern crate urbandictionary;
 
-use reqwest::Client;
+use reqwest::blocking::Client;
 use urbandictionary::ReqwestUrbanDictionaryRequester;
 
 #[ignore]
