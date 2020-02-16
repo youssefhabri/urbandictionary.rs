@@ -2,7 +2,7 @@
 
 /// A definition and example for a word, including metadata such as the author's
 /// name and the definition's rating.
-#[derive(Clone, Debug, Deserialize)]
+#[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct Definition {
     /// The name of the user who authored the definition.
     pub author: String,
@@ -28,7 +28,7 @@ pub struct Definition {
 /// [`Definition`]s.
 ///
 /// [`Definition`]: struct.Definition.html
-#[derive(Clone, Debug, Deserialize)]
+#[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct Response {
     /// A list of definitions for a request, made via a call to [`definitions`].
     ///
