@@ -27,7 +27,7 @@ pub trait UrbanDictionaryRequester {
     ///
     /// # use std::error::Error;
     /// #
-    /// # fn try_main() -> Result<(), Box<Error>> {
+    /// # fn try_main() -> Result<(), Box<dyn Error>> {
     /// #
     /// use futures::Future;
     /// use hyper::client::{Client, HttpConnector};
@@ -37,7 +37,7 @@ pub trait UrbanDictionaryRequester {
     ///
     /// let mut core = Core::new()?;
     /// let client = Client::configure()
-    ///     .connector(HttpsConnector::new(4, &core.handle())?)
+    ///     .connector(HttpsConnector::new(4)?)
     ///     .build(&core.handle());
     ///
     /// let done = client.define("cat").map(|definition| {
@@ -59,7 +59,7 @@ pub trait UrbanDictionaryRequester {
     fn define<T: AsRef<str>>(
         &self,
         word: T,
-    ) -> Box<Future<Item = Option<Definition>, Error = Error>>;
+    ) -> Box<dyn Future<Item = Option<Definition>, Error = Error>>;
 
     /// Attempt to retrieve the definitions of a word.
     ///
@@ -77,7 +77,7 @@ pub trait UrbanDictionaryRequester {
     ///
     /// # use std::error::Error;
     /// #
-    /// # fn try_main() -> Result<(), Box<Error>> {
+    /// # fn try_main() -> Result<(), Box<dyn Error>> {
     /// #
     /// use futures::Future;
     /// use hyper::client::{Client, HttpConnector};
@@ -87,7 +87,7 @@ pub trait UrbanDictionaryRequester {
     ///
     /// let mut core = Core::new()?;
     /// let client = Client::configure()
-    ///     .connector(HttpsConnector::new(4, &core.handle())?)
+    ///     .connector(HttpsConnector::new(4)?)
     ///     .build(&core.handle());
     ///
     /// let done = client.definitions("cat").map(|response| {
@@ -106,7 +106,10 @@ pub trait UrbanDictionaryRequester {
     /// #     try_main().unwrap();
     /// # }
     /// ```
-    fn definitions<T: AsRef<str>>(&self, word: T) -> Box<Future<Item = Response, Error = Error>>;
+    fn definitions<T: AsRef<str>>(
+        &self,
+        word: T,
+    ) -> Box<dyn Future<Item = Response, Error = Error>>;
 }
 
 impl<B, C: Connect> UrbanDictionaryRequester for Client<C, B>
@@ -118,13 +121,16 @@ where
     fn define<T: AsRef<str>>(
         &self,
         word: T,
-    ) -> Box<Future<Item = Option<Definition>, Error = Error>> {
+    ) -> Box<dyn Future<Item = Option<Definition>, Error = Error>> {
         Box::new(define(self, word))
     }
 
     /// Attempt to retrieve the definitions of a word.
     #[inline]
-    fn definitions<T: AsRef<str>>(&self, word: T) -> Box<Future<Item = Response, Error = Error>> {
+    fn definitions<T: AsRef<str>>(
+        &self,
+        word: T,
+    ) -> Box<dyn Future<Item = Response, Error = Error>> {
         Box::new(definitions(self, word))
     }
 }
@@ -133,7 +139,7 @@ where
 pub fn define<B, C, T>(
     client: &Client<C, B>,
     word: T,
-) -> Box<Future<Item = Option<Definition>, Error = Error>>
+) -> Box<dyn Future<Item = Option<Definition>, Error = Error>>
 where
     C: Connect,
     B: Stream<Error = HyperError> + 'static,
@@ -169,7 +175,7 @@ where
 pub fn definitions<B, C, T>(
     client: &Client<C, B>,
     word: T,
-) -> Box<Future<Item = Response, Error = Error>>
+) -> Box<dyn Future<Item = Response, Error = Error>>
 where
     C: Connect,
     B: Stream<Error = HyperError> + 'static,

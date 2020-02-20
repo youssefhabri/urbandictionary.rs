@@ -1,5 +1,4 @@
 use serde_json::Error as JsonError;
-use std::error::Error as StdError;
 use std::fmt::{Display, Formatter, Result as FmtResult};
 use std::io::Error as IoError;
 use std::result::Result as StdResult;
@@ -75,21 +74,6 @@ impl Display for Error {
             Error::Reqwest(ref inner) => inner.fmt(f),
             #[cfg(feature = "hyper-support")]
             Error::Uri(ref inner) => inner.fmt(f),
-        }
-    }
-}
-
-impl StdError for Error {
-    fn description(&self) -> &str {
-        match *self {
-            #[cfg(feature = "hyper-support")]
-            Error::Hyper(ref inner) => inner.description(),
-            Error::Json(ref inner) => inner.description(),
-            Error::Io(ref inner) => inner.description(),
-            #[cfg(feature = "reqwest-support")]
-            Error::Reqwest(ref inner) => inner.description(),
-            #[cfg(feature = "hyper-support")]
-            Error::Uri(ref inner) => inner.description(),
         }
     }
 }
