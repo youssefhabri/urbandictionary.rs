@@ -73,7 +73,7 @@
 //!
 //! Using reqwest, print the definition of the word `"cat"`:
 //!
-//! ```rust,no_run
+//! ```rust,no_run,ignore
 //! # #[cfg(feature = "reqwest-support")]
 //! #
 //! extern crate reqwest;
@@ -82,14 +82,14 @@
 //! # use std::error::Error;
 //! #
 //! # #[cfg(feature = "reqwest-support")]
-//! # fn try_main() -> Result<(), Box<Error>> {
-//! #
+//! # async fn try_main() -> Result<(), Box<dyn Error>> {
+//!
 //!
 //! use reqwest::Client;
 //! use urbandictionary::ReqwestUrbanDictionaryRequester;
 //!
 //! let client = Client::new();
-//! let response = client.define("cat")?;
+//! let response = client.define("cat").await?;
 //!
 //! if let Some(definition) = response {
 //!     println!("The definition of cat is: {}", definition.definition);
@@ -99,9 +99,10 @@
 //! #     Ok(())
 //! # }
 //! #
-//! # fn main() {
+//! # #[tokio::main]
+//! # async fn main() {
 //! #     #[cfg(feature = "reqwest-support")]
-//! #     try_main().unwrap();
+//! #     try_main().await.unwrap();
 //! # }
 //! ```
 //!

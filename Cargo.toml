@@ -17,6 +17,7 @@ edition = "2018"
 status = "actively-developed"
 
 [dependencies]
+async-trait = "^0.1"
 serde = "^1.0"
 serde_derive = "^1.0"
 serde_json = "^1.0"
@@ -32,11 +33,11 @@ version = "^0.11"
 [dependencies.reqwest]
 optional = true
 version = "^0.10"
-features = ["blocking"]
+features = ["blocking", "json"]
 
 [dev-dependencies]
 hyper-tls = "^0.3"
-tokio-core = "^0.1"
+tokio = { version = "^0.2", features = ["macros", "rt-threaded", "test-util"] }
 
 [features]
 default = ["reqwest-support"]
