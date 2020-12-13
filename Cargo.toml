@@ -40,6 +40,6 @@ hyper-tls = "^0.3"
 tokio = { version = "^0.2", features = ["macros", "rt-threaded", "test-util"] }
 
 [features]
-default = ["hyper-support"]
+default = ["reqwest-support"]
 hyper-support = ["futures", "hyper"]
 reqwest-support = ["reqwest"]
