@@ -1,15 +1,20 @@
 //! Support for the `hyper` crate.
 
-use crate::model::{Definition, Response};
-use crate::Error;
-use futures::{future, Future, Stream};
-use hyper::client::{Client, Connect};
-use hyper::{Error as HyperError, Uri};
+use crate::{
+    model::{Definition, Response},
+    Result,
+};
+use hyper::{
+    body::to_bytes,
+    client::{connect::Connect, Client},
+    Uri,
+};
 use serde_json;
 use std::str::FromStr;
 
 /// Trait implemented on Hyper's client for interaction with the UrbanDictionary
 /// API.
+#[async_trait::async_trait]
 pub trait UrbanDictionaryRequester {
     /// Attempt to retrieve the first `Definition` for a word.
     ///
@@ -56,10 +61,7 @@ pub trait UrbanDictionaryRequester {
     /// #     try_main().unwrap();
     /// # }
     /// ```
-    fn define<T: AsRef<str>>(
-        &self,
-        word: T,
-    ) -> Box<dyn Future<Item = Option<Definition>, Error = Error>>;
+    async fn define<T: AsRef<str> + Send>(&self, word: T) -> Result<Option<Definition>>;
 
     /// Attempt to retrieve the definitions of a word.
     ///
@@ -106,96 +108,54 @@ pub trait UrbanDictionaryRequester {
     /// #     try_main().unwrap();
     /// # }
     /// ```
-    fn definitions<T: AsRef<str>>(
-        &self,
-        word: T,
-    ) -> Box<dyn Future<Item = Response, Error = Error>>;
+    async fn definitions<T: AsRef<str> + Send>(&self, word: T) -> Result<Response>;
 }
 
-impl<B, C: Connect> UrbanDictionaryRequester for Client<C, B>
+#[async_trait::async_trait]
+impl<C> UrbanDictionaryRequester for Client<C>
 where
-    B: Stream<Error = HyperError> + 'static,
-    B::Item: AsRef<[u8]>,
+    C: Connect + Clone + Send + Sync + 'static,
 {
     /// Attempt to retrieve the first `Definition` for a word.
-    fn define<T: AsRef<str>>(
-        &self,
-        word: T,
-    ) -> Box<dyn Future<Item = Option<Definition>, Error = Error>> {
-        Box::new(define(self, word))
+    async fn define<T: AsRef<str> + Send>(&self, word: T) -> Result<Option<Definition>> {
+        define(self, word).await
     }
 
     /// Attempt to retrieve the definitions of a word.
     #[inline]
-    fn definitions<T: AsRef<str>>(
-        &self,
-        word: T,
-    ) -> Box<dyn Future<Item = Response, Error = Error>> {
-        Box::new(definitions(self, word))
+    async fn definitions<T: AsRef<str> + Send>(&self, word: T) -> Result<Response> {
+        definitions(self, word).await
     }
 }
 
 /// Attempt to retrieve the first `Definition` for a word.
-pub fn define<B, C, T>(
-    client: &Client<C, B>,
-    word: T,
-) -> Box<dyn Future<Item = Option<Definition>, Error = Error>>
+pub async fn define<C, T>(client: &Client<C>, word: T) -> Result<Option<Definition>>
 where
-    C: Connect,
-    B: Stream<Error = HyperError> + 'static,
-    B::Item: AsRef<[u8]>,
+    C: Connect + Clone + Send + Sync + 'static,
     T: AsRef<str>,
 {
-    let url = format!(
-        "http://api.urbandictionary.com/v0/define?term={}",
-        word.as_ref(),
-    );
-    let uri = match Uri::from_str(&url) {
-        Ok(v) => v,
-        Err(why) => return Box::new(future::err(Error::Uri(why))),
-    };
+    let mut definitions = definitions(client, word).await?;
 
-    Box::new(
-        client
-            .get(uri)
-            .and_then(|res| res.body().concat2())
-            .map_err(From::from)
-            .and_then(|body| serde_json::from_slice::<Response>(&body).map_err(From::from))
-            .map(|mut resp| {
-                if !resp.definitions.is_empty() {
-                    Some(resp.definitions.remove(0))
-                } else {
-                    None
-                }
-            }),
-    )
+    Ok(if !definitions.definitions.is_empty() {
+        Some(definitions.definitions.remove(0))
+    } else {
+        None
+    })
 }
 
 /// Attempt to retrieve the definitions of a word.
-pub fn definitions<B, C, T>(
-    client: &Client<C, B>,
-    word: T,
-) -> Box<dyn Future<Item = Response, Error = Error>>
+pub async fn definitions<C, T>(client: &Client<C>, word: T) -> Result<Response>
 where
-    C: Connect,
-    B: Stream<Error = HyperError> + 'static,
-    B::Item: AsRef<[u8]>,
+    C: Connect + Clone + Send + Sync + 'static,
     T: AsRef<str>,
 {
     let url = format!(
         "http://api.urbandictionary.com/v0/define?term={}",
         word.as_ref(),
     );
-    let uri = match Uri::from_str(&url) {
-        Ok(v) => v,
-        Err(why) => return Box::new(future::err(Error::Uri(why))),
-    };
+    let uri = Uri::from_str(&url)?;
+    let resp = client.get(uri).await?;
+    let bytes = to_bytes(resp.into_body()).await?;
 
-    Box::new(
-        client
-            .get(uri)
-            .and_then(|res| res.body().concat2())
-            .map_err(From::from)
-            .and_then(|body| serde_json::from_slice(&body).map_err(From::from)),
-    )
+    serde_json::from_slice(&bytes.to_vec()).map_err(From::from)
 }

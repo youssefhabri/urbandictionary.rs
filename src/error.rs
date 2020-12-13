@@ -4,7 +4,10 @@ use std::io::Error as IoError;
 use std::result::Result as StdResult;
 
 #[cfg(feature = "hyper-support")]
-use hyper::error::{Error as HyperError, UriError};
+use hyper::error::Error as HyperError;
+#[cfg(feature = "hyper-support")]
+use hyper::http::uri::InvalidUri;
+
 #[cfg(feature = "reqwest-support")]
 use reqwest::Error as ReqwestError;
 
@@ -27,7 +30,7 @@ pub enum Error {
     Reqwest(ReqwestError),
     /// An error from `hyper` while parsing a URI.
     #[cfg(feature = "hyper-support")]
-    Uri(UriError),
+    Uri(InvalidUri),
 }
 
 impl From<IoError> for Error {
@@ -57,8 +60,8 @@ impl From<ReqwestError> for Error {
 }
 
 #[cfg(feature = "hyper-support")]
-impl From<UriError> for Error {
-    fn from(err: UriError) -> Error {
+impl From<InvalidUri> for Error {
+    fn from(err: InvalidUri) -> Error {
         Error::Uri(err)
     }
 }
