@@ -32,12 +32,12 @@ version = "^0.13"
 
 [dependencies.reqwest]
 optional = true
-version = "^0.10"
+version = "^0.11"
 features = ["json"]
 
 [dev-dependencies]
 hyper-tls = "^0.3"
-tokio = { version = "^0.2", features = ["macros", "rt-threaded", "test-util"] }
+tokio = { version = "^1.0", features = ["macros", "rt-multi-thread", "test-util"] }
 
 [features]
 default = ["reqwest-support"]
